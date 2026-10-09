@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeriSerp AI — Autonomous Multi-Engine Intelligence & Fact-Checking Agent</title>
+  <meta name="description" content="Autonomous multi-engine research and fact-checking agent built with SerpApi search tools for the SerpApi India Hackathon 2026. Cross-references live search, news, and authoritative data.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  
+  <!-- Modern Typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome for crisp modern icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Markdown parser for rich dossier rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <!-- Ambient background lighting effects -->
+  <div class="ambient-glow glow-cyan"></div>
+  <div class="ambient-glow glow-indigo"></div>
+
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <div class="brand-icon">
+          <i class="fa-solid fa-magnifying-glass-chart"></i>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title">VeriSerp <span class="brand-accent">AI</span></div>
+          <div class="brand-subtitle">Autonomous Multi-Engine Intelligence Agent</div>
+        </div>
+      </div>
+
+      <div class="header-badges">
+        <span class="badge hackathon-badge" title="Built for SerpApi India Hackathon 2026">
+          <i class="fa-solid fa-trophy"></i> SerpApi India Hackathon 2026
+        </span>
+        <span class="badge tool-badge">
+          <i class="fa-brands fa-python"></i> serpapi-search-tools
+        </span>
+        <span class="badge mcp-badge">
+          <i class="fa-solid fa-network-wired"></i> FastMCP Ready
+        </span>
+      </div>
+
+      <div class="header-actions">
+        <button id="btn-mcp-info" class="btn btn-glass" title="View MCP Integration">
+          <i class="fa-solid fa-cube"></i> MCP Connect
+        </button>
+        <button id="btn-key-modal" class="btn btn-glass" title="Configure SerpApi API Key">
+          <i class="fa-solid fa-key"></i> <span id="key-status-label">API Key</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Container -->
+  <main class="app-main">
+    <!-- Hero / Query Input Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-pill">
+          <span class="pill-dot"></span>
+          Live Search Corroboration Engine across Google Light, Bing & Google News
+        </div>
+        <h1 class="hero-title">
+          Deconstruct Claims. Search Multi-Engine. <br>
+          <span class="gradient-text">Synthesize Objective Truth.</span>
+        </h1>
+        <p class="hero-subtitle">
+          An autonomous intelligence agent that deconstructs research queries, executes parallel multi-engine searches using official <code>serpapi-search-tools</code>, cross-verifies source consensus, and generates executive dossiers.
+        </p>
+
+        <!-- Command Input Box -->
+        <div class="search-command-card">
+          <div class="search-input-wrapper">
+            <i class="fa-solid fa-bolt-lightning search-input-icon"></i>
+            <input 
+              type="text" 
+              id="search-query-input" 
+              class="search-query-input" 
+              placeholder="Enter a breaking claim, research topic, market trend, or policy..."
+              autocomplete="off"
+            >
+            <button id="btn-clear-query" class="btn-clear hidden" title="Clear input">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="search-controls">
+            <div class="control-group">
+              <label class="control-label" for="depth-select">
+                <i class="fa-solid fa-sliders"></i> Investigation Depth:
+              </label>
+              <select id="depth-select" class="control-select">
+                <option value="balanced" selected>Balanced Multi-Engine (Web + News + Cross-Check)</option>
+                <option value="deep">Deep Scrutiny (+ Counter-Claims & Fact-Checks)</option>
+              </select>
+            </div>
+
+            <div class="control-group-right">
+              <label class="toggle-container" title="Use verified offline benchmark dataset without burning API calls">
+                <input type="checkbox" id="toggle-simulation">
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">Demo / Benchmark Mode</span>
+              </label>
+
+              <button id="btn-launch-search" class="btn btn-primary btn-launch">
+                <i class="fa-solid fa-compass"></i> Launch Investigation
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Curated Showcase Templates -->
+        <div class="templates-container">
+          <div class="templates-header">
+            <i class="fa-solid fa-sparkles"></i> Try Hackathon Showcase Prompts:
+          </div>
+          <div class="templates-grid" id="templates-grid">
+            <!-- Dynamically populated or fallback -->
+            <button class="template-chip" data-query="Tata Electronics Dholera semiconductor fab commercial chip production 2026 timeline and partner status">
+              <span class="chip-category">Manufacturing</span>
+              <span class="chip-title">Tata Dholera Fab 2026 Status</span>
+            </button>
+            <button class="template-chip" data-query="ISRO Gaganyaan uncrewed test flight and crewed orbital mission schedule status 2026">
+              <span class="chip-category">Space</span>
+              <span class="chip-title">ISRO Gaganyaan 2026 Windows</span>
+            </button>
+            <button class="template-chip" data-query="OpenAI o3 reasoning model benchmarks math and coding vs DeepSeek R1 2026">
+              <span class="chip-category">AI Frontiers</span>
+              <span class="chip-title">OpenAI o3 Benchmarks</span>
+            </button>
+            <button class="template-chip" data-query="Did India commercially deploy a 100 qubit quantum computer in early 2026?">
+              <span class="chip-category">Fact Check</span>
+              <span class="chip-title">100-Qubit Processor Claim</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Investigation Progress Stepper (Animated) -->
+    <section id="progress-section" class="progress-section hidden">
+      <div class="progress-card">
+        <div class="progress-header">
+          <div class="progress-spinner">
+            <i class="fa-solid fa-atom fa-spin"></i>
+          </div>
+          <div class="progress-info">
+            <h3 class="progress-title" id="progress-status-title">Deconstructing Research Trajectory...</h3>
+            <p class="progress-detail" id="progress-status-detail">Formulating hypotheses and multi-engine query plans across Google Light, Bing, and News indexes.</p>
+          </div>
+          <div class="progress-timer" id="progress-timer">0.0s</div>
+        </div>
+
+        <!-- Stepper Indicators -->
+        <div class="stepper-track">
+          <div class="step-item active" id="step-1">
+            <div class="step-circle"><i class="fa-solid fa-diagram-project"></i></div>
+            <div class="step-label">1. Deconstruct</div>
+          </div>
+          <div class="step-line" id="step-line-1"></div>
+          <div class="step-item" id="step-2">
+            <div class="step-circle"><i class="fa-solid fa-server"></i></div>
+            <div class="step-label">2. Multi-Engine</div>
+          </div>
+          <div class="step-line" id="step-line-2"></div>
+          <div class="step-item" id="step-3">
+            <div class="step-circle"><i class="fa-solid fa-scale-balanced"></i></div>
+            <div class="step-label">3. Corroborate</div>
+          </div>
+          <div class="step-line" id="step-line-3"></div>
+          <div class="step-item" id="step-4">
+            <div class="step-circle"><i class="fa-solid fa-file-signature"></i></div>
+            <div class="step-label">4. Synthesize</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Intelligence Dashboard -->
+    <section id="results-section" class="results-section hidden">
+      <!-- Top Intelligence Metrics Bar -->
+      <div class="metrics-row">
+        <!-- Verdict Card -->
+        <div class="metric-card verdict-card" id="verdict-card">
+          <div class="verdict-header">
+            <span class="card-eyebrow"><i class="fa-solid fa-shield-halved"></i> Verification Verdict</span>
+            <span class="confidence-badge" id="confidence-level-badge">High Confidence</span>
+          </div>
+          
+          <div class="verdict-body">
+            <div class="gauge-container">
+              <svg class="gauge-svg" viewBox="0 0 100 100">
+                <circle class="gauge-bg" cx="50" cy="50" r="42"></circle>
+                <circle class="gauge-progress" id="gauge-circle" cx="50" cy="50" r="42"></circle>
+              </svg>
+              <div class="gauge-text">
+                <span class="gauge-value" id="consensus-value">0%</span>
+                <span class="gauge-label">Consensus</span>
+              </div>
+            </div>
+
+            <div class="verdict-details">
+              <div class="verdict-title" id="verdict-title">Evaluating...</div>
+              <p class="verdict-summary" id="verdict-summary">Multi-source corroboration across independent indexes.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Telemetry & Coverage Card -->
+        <div class="metric-card telemetry-card">
+          <div class="card-eyebrow"><i class="fa-solid fa-network-wired"></i> Multi-Engine Execution Telemetry</div>
+          <div class="telemetry-grid">
+            <div class="telemetry-item">
+              <div class="telemetry-icon"><i class="fa-solid fa-layer-group"></i></div>
+              <div class="telemetry-text">
+                <div class="telemetry-val" id="metric-sources-count">0</div>
+                <div class="telemetry-lbl">Sources Evaluated</div>
+              </div>
+            </div>
+            <div class="telemetry-item">
+              <div class="telemetry-icon"><i class="fa-solid fa-globe"></i></div>
+              <div class="telemetry-text">
+                <div class="telemetry-val" id="metric-domains-count">0</div>
+                <div class="telemetry-lbl">Unique Domains</div>
+              </div>
+            </div>
+            <div class="telemetry-item">
+              <div class="telemetry-icon"><i class="fa-solid fa-stopwatch"></i></div>
+              <div class="telemetry-text">
+                <div class="telemetry-val" id="metric-latency">0ms</div>
+                <div class="telemetry-lbl">Total Latency</div>
+              </div>
+            </div>
+            <div class="telemetry-item">
+              <div class="telemetry-icon"><i class="fa-solid fa-microchip"></i></div>
+              <div class="telemetry-text">
+                <div class="telemetry-val" id="metric-synthesizer">Native</div>
+                <div class="telemetry-lbl">Synthesizer Engine</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="engine-pills-row">
+            <span class="engine-pill-label">Engines Consulted:</span>
+            <div class="engine-pills-list" id="engine-pills-list">
+              <span class="pill-engine"><i class="fa-brands fa-google"></i> Google Light</span>
+              <span class="pill-engine"><i class="fa-solid fa-newspaper"></i> Google News</span>
+              <span class="pill-engine"><i class="fa-brands fa-microsoft"></i> Bing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Dual-Column Working Area -->
+      <div class="dashboard-grid">
+        <!-- Left: Dossier Column -->
+        <div class="dossier-column">
+          <div class="panel-card dossier-panel">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <i class="fa-solid fa-file-contract panel-icon"></i>
+                <div>
+                  <h2 class="panel-title">Intelligence Dossier</h2>
+                  <div class="panel-subtitle">Comprehensive analytical synthesis and citations</div>
+                </div>
+              </div>
+              <div class="panel-actions">
+                <button id="btn-copy-dossier" class="btn btn-sm btn-glass" title="Copy Markdown Report">
+                  <i class="fa-solid fa-copy"></i> Copy
+                </button>
+                <button id="btn-download-dossier" class="btn btn-sm btn-glass" title="Download Report as .md">
+                  <i class="fa-solid fa-download"></i> Export
+                </button>
+              </div>
+            </div>
+
+            <div class="dossier-body markdown-content" id="dossier-markdown-body">
+              <!-- Rendered markdown goes here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Evidence & Queries Column -->
+        <div class="evidence-column">
+          <div class="panel-card evidence-panel">
+            <!-- Tabs Header -->
+            <div class="panel-tabs">
+              <button class="tab-btn active" data-tab="tab-evidence" id="tab-btn-evidence">
+                <i class="fa-solid fa-boxes-stacked"></i> Evidence Records (<span id="evidence-tab-count">0</span>)
+              </button>
+              <button class="tab-btn" data-tab="tab-queries" id="tab-btn-queries">
+                <i class="fa-solid fa-terminal"></i> Query Telemetry (<span id="queries-tab-count">0</span>)
+              </button>
+              <button class="tab-btn" data-tab="tab-domains" id="tab-btn-domains">
+                <i class="fa-solid fa-chart-pie"></i> Domain Graph
+              </button>
+            </div>
+
+            <!-- Tab 1: Evidence Records -->
+            <div class="tab-content active" id="tab-evidence">
+              <!-- Filter chips -->
+              <div class="evidence-filters">
+                <button class="filter-chip active" data-filter="all">All (<span id="count-all">0</span>)</button>
+                <button class="filter-chip" data-filter="supporting">Corroborating (<span id="count-supporting">0</span>)</button>
+                <button class="filter-chip" data-filter="counter">Counter/Disputed (<span id="count-counter">0</span>)</button>
+                <button class="filter-chip" data-filter="nuanced">Contextual (<span id="count-nuanced">0</span>)</button>
+              </div>
+
+              <div class="evidence-list" id="evidence-list">
+                <!-- Dynamically populated evidence cards -->
+              </div>
+            </div>
+
+            <!-- Tab 2: Query Telemetry -->
+            <div class="tab-content" id="tab-queries">
+              <div class="query-trace-list" id="query-trace-list">
+                <!-- Dynamically populated query traces -->
+              </div>
+            </div>
+
+            <!-- Tab 3: Domain Graph -->
+            <div class="tab-content" id="tab-domains">
+              <div class="domains-breakdown-card">
+                <h4 class="subhead">Authoritative Domain Distribution</h4>
+                <p class="subtext">Independent web properties cross-referenced to avoid single-source bias.</p>
+                <div class="domain-bars-container" id="domain-bars-container">
+                  <!-- Dynamically populated domain distribution bars -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <span>VeriSerp AI</span> • Built for <strong>SerpApi India Hackathon 2026</strong>
+      </div>
+      <div class="footer-links">
+        <a href="https://serpapi.com/integrations/mcp?utm_source=india_hackathon_26" target="_blank" rel="noopener">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> SerpApi MCP Docs
+        </a>
+        <a href="https://serpapi.github.io/serpapi-search-tools-python/?utm_source=india_hackathon_26" target="_blank" rel="noopener">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> serpapi-search-tools Python
+        </a>
+        <a href="https://serpapi.com/manage-api-key" target="_blank" rel="noopener">
+          <i class="fa-solid fa-key"></i> Get API Key
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- API Key Modal -->
+  <div id="modal-key" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <i class="fa-solid fa-key modal-icon"></i>
+          <h3>SerpApi Key Configuration</h3>
+        </div>
+        <button id="btn-close-key-modal" class="btn-icon-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">
+          Enter your SerpApi API key to execute live searches across Google Light, Bing, and Google News.
+          Get your free API key at <a href="https://serpapi.com/manage-api-key" target="_blank" rel="noopener">serpapi.com/manage-api-key</a>.
+        </p>
+        <div class="form-group">
+          <label for="input-serpapi-key">SerpApi API Key</label>
+          <div class="key-input-wrapper">
+            <input type="password" id="input-serpapi-key" placeholder="Paste your SerpApi key here...">
+            <button id="btn-toggle-key-visibility" class="btn-toggle-key" title="Show/Hide Key">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+          <div class="key-status-msg" id="key-test-feedback"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-test-key" class="btn btn-glass">
+          <i class="fa-solid fa-vial"></i> Test Connection
+        </button>
+        <button id="btn-save-key" class="btn btn-primary">
+          <i class="fa-solid fa-check"></i> Save Key
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MCP Integration Modal -->
+  <div id="modal-mcp" class="modal-backdrop hidden">
+    <div class="modal-box modal-lg">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <i class="fa-solid fa-cube modal-icon"></i>
+          <h3>Model Context Protocol (MCP) Integration</h3>
+        </div>
+        <button id="btn-close-mcp-modal" class="btn-icon-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">
+          VeriSerp AI includes a native FastMCP server and connects with SerpApi's hosted MCP endpoint. Add live search and fact-checking to Claude Desktop, Cursor, or VS Code!
+        </p>
+
+        <h4 class="subhead mt-3">Option 1: Official Hosted SerpApi MCP</h4>
+        <p class="subtext">Add directly to Claude Desktop (<code>claude_desktop_config.json</code>) or Cursor:</p>
+        <div class="code-snippet-box">
+          <pre><code id="code-mcp-hosted">{
+  "mcpServers": {
+    "serpapi": {
+      "type": "http",
+      "url": "https://mcp.serpapi.com/YOUR_SERPAPI_API_KEY/mcp"
+    }
+  }
+}</code></pre>
+          <button class="btn-copy-code" data-target="code-mcp-hosted" title="Copy JSON">
+            <i class="fa-solid fa-copy"></i>
+          </button>
+        </div>
+
+        <h4 class="subhead mt-4">Option 2: VeriSerp AI Agent FastMCP Server</h4>
+        <p class="subtext">Run VeriSerp's autonomous multi-engine fact-checking agent locally over stdio:</p>
+        <div class="code-snippet-box">
+          <pre><code id="code-mcp-local">{
+  "mcpServers": {
+    "veriserp": {
+      "command": "uv",
+      "args": ["run", "python", "-m", "app.mcp_server"],
+      "env": {
+        "SERPAPI_API_KEY": "YOUR_SERPAPI_API_KEY"
+      }
+    }
+  }
+}</code></pre>
+          <button class="btn-copy-code" data-target="code-mcp-local" title="Copy JSON">
+            <i class="fa-solid fa-copy"></i>
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-close-mcp-footer" class="btn btn-primary">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
